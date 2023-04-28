@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+
 
 const AddHabits = () => {
   const [habits, setHabits] = useState([]);
   const [inputValue, setInputValue] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  
     if (inputValue.trim() === '') {
       return;
     }
-
-    setHabits([...habits, inputValue]);
+  
+    setHabits([...habits, { id: Math.random().toString(), title: inputValue }]);
     setInputValue('');
   };
+  
 
-  const deleteHabit = (indexToDelete) => {
-    setHabits(habits.filter((_, index) => index !== indexToDelete));
+  const deleteHabit = (idToDelete) => {
+    setHabits(habits.filter((habit) => habit.id !== idToDelete));
   };
+  
 
   return (
     <div>
@@ -32,13 +35,16 @@ const AddHabits = () => {
         <button type="submit">Add Habit</button>
       </form>
       <ul>
-        {habits.map((habit, index) => (
-          <li key={index}>
-            {habit}
-            <button onClick={() => deleteHabit(index)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+  {habits.map((habit) => (
+    <li key={habit.id}>
+      {habit.title}
+      <button type="button" onClick={() => deleteHabit(habit.id)}>
+        Delete
+      </button>
+    </li>
+  ))}
+</ul>
+
     </div>
   );
 };

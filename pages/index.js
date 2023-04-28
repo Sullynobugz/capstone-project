@@ -1,7 +1,8 @@
+import AddHabits from '../components/AddHabits/AddHabits';
 export default function HomePage() {
   return (
     <div>
-      <h1></h1>
+    <AddHabits />
     </div>
   );
 }
