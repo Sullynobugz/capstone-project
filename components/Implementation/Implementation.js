@@ -77,71 +77,64 @@ const Implementation = () => {
             setHabit={setHabit}
           />
 
-{[
-  ["goal", "Goal:", goal, setGoal],
-  ["frequency", "Frequency:", frequency, setFrequency],
-  ["intensity", "Intensity:", intensity, setIntensity],
-  ["startingPoint", "Starting Point:", startingPoint, setStartingPoint],
-  ["weeklyIncrement", "Weekly Increment:", weeklyIncrement, setWeeklyIncrement],
-].map(([id, label, value, setter]) => (
-  <div
-    key={id}
-    style={{
-      display: "flex",
-      alignItems: "center",
-      marginBottom: "16px",
-    }}
-  >
-    <label
-      htmlFor={id}
-      style={{
-        minWidth: "180px",
-        marginRight: "16px",
-        textAlign: "right",
-      }}
-    >
-      {label}
-    </label>
-    <input
-  type="text"
-  id={id}
-  value={value}
-  onChange={(e) => setter(e.target.value)}
-  className="implementation-input"
-/>
-
-  </div>
-))}
-
+          {[
+            ["goal", "Goal:", goal, setGoal],
+            ["frequency", "Frequency:", frequency, setFrequency],
+            ["intensity", "Intensity:", intensity, setIntensity],
+            [
+              "startingPoint",
+              "Starting Point:",
+              startingPoint,
+              setStartingPoint,
+            ],
+            [
+              "weeklyIncrement",
+              "Weekly Increment:",
+              weeklyIncrement,
+              setWeeklyIncrement,
+            ],
+          ].map(([id, label, value, setter]) => (
+            <div key={id} className="form-field">
+              <label htmlFor={id}>{label}</label>
+              <input
+                type="text"
+                id={id}
+                value={value}
+                onChange={(e) => setter(e.target.value)}
+                className="implementation-input"
+              />
+            </div>
+          ))}
         </div>
         <button type="submit">Save Implementation Details</button>
       </form>
 
       <style jsx>{`
         .form-container {
+          align-items: flex-start;
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
-          max-width: 600px;
           margin: 0 auto;
+          max-width: 600px;
+          position: relative;
+          z-index: 500;
         }
 
-        .form-container div {
-          display: flex;
+        .form-field {
           align-items: center;
+          display: flex;
           margin-bottom: 16px;
         }
 
         .form-container label {
-          min-width: 180px;
           margin-right: 16px;
+          min-width: 180px;
           text-align: right;
         }
 
         .form-container select {
           position: relative;
         }
-      
       `}</style>
     </div>
   );
