@@ -1,5 +1,5 @@
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 const AddHabits = () => {
   const [habits, setHabits] = useState([]);
@@ -7,20 +7,28 @@ const AddHabits = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-  
+
     if (inputValue.trim() === '') {
       return;
     }
-  
-    setHabits([...habits, { id: Math.random().toString(), title: inputValue }]);
+
+    const newHabit = { id: Math.random().toString(), title: inputValue };
+    setHabits([...habits, newHabit]);
     setInputValue('');
+
+    localStorage.setItem('habits', JSON.stringify([...habits, newHabit]));
   };
-  
 
   const deleteHabit = (idToDelete) => {
     setHabits(habits.filter((habit) => habit.id !== idToDelete));
   };
-  
+
+  useEffect(() => {
+    const storedHabits = localStorage.getItem('habits');
+    if (storedHabits) {
+      setHabits(JSON.parse(storedHabits));
+    }
+  }, []);
 
   return (
     <div>
@@ -35,16 +43,20 @@ const AddHabits = () => {
         <button type="submit">Add Habit</button>
       </form>
       <ul>
-  {habits.map((habit) => (
-    <li key={habit.id}>
-      {habit.title}
-      <button type="button" onClick={() => deleteHabit(habit.id)}>
-        Delete
-      </button>
-    </li>
-  ))}
-</ul>
-
+        {habits.map((habit) => (
+          <li key={habit.id}>
+            {habit.title}
+            <button type="button" onClick={() => deleteHabit(habit.id)}>
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+      <div>
+        <Link href="/implementation">
+          <div>Implementation</div>
+        </Link>
+      </div>
     </div>
   );
 };
