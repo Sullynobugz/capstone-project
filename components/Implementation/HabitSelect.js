@@ -1,28 +1,34 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import styled from "styled-components";
 
 const HabitSelectContainer = styled.div`
   position: relative;
-  height: 48px;
-  padding-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 `;
 
 const HabitSelectButton = styled.button`
-  // Styling für den Habit-Auswahl-Button
+  border: none;
+  background-color: transparent;
+  font-size: 1.5rem;
+  cursor: pointer;
 `;
 
 const HabitSelectDropdown = styled.div`
   position: absolute;
   top: 100%;
   left: 0;
-  width: 100%;
-  margin-top: 8px;
-  display: ${(props) => (props.showDropdown ? 'block' : 'none')};
-  z-index: 1000;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 2000;
+  display: ${(props) => (props.showDropdown ? "block" : "none")};
 `;
 
-
-const HabitDropdownItem = styled.div`
+const HabitDropdownItem = styled.a`
   cursor: pointer;
   padding: 5px;
   text-decoration: none;
@@ -38,7 +44,7 @@ const HabitDropdownItem = styled.div`
   }
 `;
 
-const HabitSelectComponent = ({ habits, habit, setHabit }) => {
+const HabitSelect = ({ habits, habit, setHabit }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const toggleHabitDropdown = () => {
@@ -53,20 +59,21 @@ const HabitSelectComponent = ({ habits, habit, setHabit }) => {
   return (
     <HabitSelectContainer>
       <HabitSelectButton onClick={toggleHabitDropdown}>
-        {habit || 'Select a habit...'} {showDropdown ? '▲' : '▼'}
+        {habit || "Select a habit..."} {showDropdown ? "▲" : "▼"}
       </HabitSelectButton>
       <HabitSelectDropdown showDropdown={showDropdown}>
-        {habits.map((habit) => (
-          <HabitDropdownItem
-            key={habit.id}
-            onClick={() => handleHabitChange(habit.title)}
-          >
-            {habit.title}
-          </HabitDropdownItem>
-        ))}
+        {habits &&
+          habits.map((habit) => (
+            <HabitDropdownItem
+              key={habit.id}
+              onClick={() => handleHabitChange(habit.title)}
+            >
+              {habit.title}
+            </HabitDropdownItem>
+          ))}
       </HabitSelectDropdown>
     </HabitSelectContainer>
   );
 };
 
-export default HabitSelectComponent;
+export default HabitSelect;

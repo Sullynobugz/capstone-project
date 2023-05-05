@@ -5,10 +5,15 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  html,
   body {
     margin: 0;
+    padding: 0;
+    background-color: #2c2c2c; /* Hintergrundfarbe ändern */
+  }
+
+  body {
     font-family: system-ui;
-    padding: 20px;
   }
 
   /* Mobile-First-Styles */
@@ -42,6 +47,5 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 `;
-
 
 export default GlobalStyle;
