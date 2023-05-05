@@ -6,6 +6,7 @@ const HabitSelectContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  margin-bottom: 32px;
 `;
 
 const HabitSelectButton = styled.button`
@@ -13,6 +14,7 @@ const HabitSelectButton = styled.button`
   background-color: transparent;
   font-size: 1.5rem;
   cursor: pointer;
+  color: white;
 `;
 
 const HabitSelectDropdown = styled.div`

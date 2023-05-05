@@ -107,7 +107,9 @@ const AddHabits = () => {
       </List>
       <div>
         <Link href="/implementation">
-          <div>Implementation</div>
+          <div style={{ color: "#f5f5f5", textDecoration: "none" }}>
+            Implementation
+          </div>
         </Link>
       </div>
     </Container>
