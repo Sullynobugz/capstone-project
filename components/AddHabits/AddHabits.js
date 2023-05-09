@@ -62,6 +62,17 @@ const AddHabits = () => {
   const [habits, setHabits] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
+  useEffect(() => {
+    const storedHabits = localStorage.getItem("habits");
+    if (storedHabits) {
+      setHabits(JSON.parse(storedHabits));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("habits", JSON.stringify(habits));
+  }, [habits]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -72,20 +83,11 @@ const AddHabits = () => {
     const newHabit = { id: uuidv4(), title: inputValue };
     setHabits([...habits, newHabit]);
     setInputValue("");
-
-    localStorage.setItem("habits", JSON.stringify([...habits, newHabit]));
   };
 
   const deleteHabit = (idToDelete) => {
     setHabits(habits.filter((habit) => habit.id !== idToDelete));
   };
-
-  useEffect(() => {
-    const storedHabits = localStorage.getItem("habits");
-    if (storedHabits) {
-      setHabits(JSON.parse(storedHabits));
-    }
-  }, []);
 
   return (
     <Container>
