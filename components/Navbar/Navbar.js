@@ -1,23 +1,22 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    setShowDropdown(false); // Setze showDropdown auf false beim Rendern auf dem Server
-  }, []);
+  const handleImplementationClick = () => {
+    router.push("/implementation");
+  };
+
+  const handleAddHabitsClick = () => {
+    router.push("/addhabits");
+  };
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
-  };
-
-  const handleNavigation = (href) => {
-    router.push(href);
-    setShowDropdown(false);
   };
 
   return (
@@ -27,21 +26,18 @@ const Navbar = () => {
       </MenuButton>
       <DropdownContainer showDropdown={showDropdown}>
         <DropdownLinks>
-          <DropdownLink onClick={() => handleNavigation("/addhabits")}>
-            Add Habits
-          </DropdownLink>
-          <DropdownLink onClick={() => handleNavigation("/implementation")}>
-            Implementation
-          </DropdownLink>
-
-          {/* Weitere Links hier hinzufügen */}
+          <div onClick={handleAddHabitsClick}>
+            <DropdownLink>Add Habits</DropdownLink>
+          </div>
+          <div onClick={handleImplementationClick}>
+            <DropdownLink>Implementation</DropdownLink>
+          </div>
+          {/* Additional links here */}
         </DropdownLinks>
       </DropdownContainer>
     </Container>
   );
 };
-
-// Restlicher Code bleibt unverändert
 
 const Container = styled.nav`
   display: flex;

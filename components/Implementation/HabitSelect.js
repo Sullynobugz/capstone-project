@@ -46,7 +46,7 @@ const HabitDropdownItem = styled.a`
   }
 `;
 
-const HabitSelect = ({ habits, habit, setHabit }) => {
+const HabitSelect = ({ habits, habit, onHabitChange }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const toggleHabitDropdown = () => {
@@ -54,7 +54,7 @@ const HabitSelect = ({ habits, habit, setHabit }) => {
   };
 
   const handleHabitChange = (habit) => {
-    setHabit(habit);
+    onHabitChange(habit);
     setShowDropdown(false);
   };
 

@@ -1,5 +1,7 @@
+import React, { useState } from "react";
 import styled from "styled-components";
-import HabitSelectComponent from "./HabitSelect";
+import HabitSelect from "./HabitSelect";
+
 
 const FormContainer = styled.div`
   align-items: flex-start;
@@ -21,12 +23,17 @@ const Title = styled.h2`
 `;
 
 const HabitForm = ({ habits, habit, setHabit }) => {
+  const handleHabitChange = (newHabit) => {
+    setHabit(newHabit);
+  };
+
   return (
     <FormContainer>
       <Title>Select a Habit</Title>
-      <HabitSelectComponent habits={habits} habit={habit} setHabit={setHabit} />
+      <HabitSelect habits={habits} habit={habit} onHabitChange={handleHabitChange} />
     </FormContainer>
   );
 };
+
 
 export default HabitForm;

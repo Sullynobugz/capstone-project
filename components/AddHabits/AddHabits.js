@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 
 const Input = styled.input`
   background-color: #444;
@@ -10,9 +11,13 @@ const Input = styled.input`
   margin: 8px;
 `;
 
-const Button = styled.button`
-  background-color: #444;
-  border: 1px solid #777;
+const Label = styled.label`
+  color: #f5f5f5;
+`;
+
+const CommonButton = styled.button`
+  background-color: ${(props) => props.backgroundColor || "#444"};
+  border: ${(props) => (props.noBorder ? "none" : "1px solid #777")};
   color: #f5f5f5;
   padding: 8px;
   margin: 8px;
@@ -34,15 +39,6 @@ const ListItem = styled.li`
   justify-content: space-between;
 `;
 
-const DeleteButton = styled.button`
-  background-color: #f44336; /* Rote Schaltfläche */
-  border: none;
-  color: #f5f5f5;
-  padding: 8px;
-  margin: 8px;
-  cursor: pointer;
-`;
-
 const Container = styled.div`
   background-color: #2c2c2c;
   min-height: 100vh;
@@ -52,6 +48,14 @@ const Container = styled.div`
 const Title = styled.h1`
   color: #f5f5f5;
   text-align: center;
+`;
+
+const StyledLink = styled.a`
+  color: #f5f5f5;
+  text-decoration: none;
+  &:hover {
+    color: #f5f5f5;
+  }
 `;
 
 const AddHabits = () => {
@@ -65,7 +69,7 @@ const AddHabits = () => {
       return;
     }
 
-    const newHabit = { id: Math.random().toString(), title: inputValue };
+    const newHabit = { id: uuidv4(), title: inputValue };
     setHabits([...habits, newHabit]);
     setInputValue("");
 
@@ -87,31 +91,36 @@ const AddHabits = () => {
     <Container>
       <Title>Hatrack</Title>
       <form onSubmit={handleSubmit}>
+        <Label htmlFor="new-habit-input">Enter a new habit:</Label>
         <Input
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Enter a new habit"
+          id="new-habit-input"
         />
-        <Button type="submit">Add Habit</Button>
+        <CommonButton type="submit">Add Habit</CommonButton>
       </form>
-      <List>
+      <List role="list">
         {habits.map((habit) => (
           <ListItem key={habit.id}>
             {habit.title}
-            <DeleteButton type="button" onClick={() => deleteHabit(habit.id)}>
+            <CommonButton
+              type="button"
+              onClick={() => deleteHabit(habit.id)}
+              backgroundColor="#f44336"
+              noBorder
+            >
               Delete
-            </DeleteButton>
+            </CommonButton>
           </ListItem>
         ))}
       </List>
-      <div>
-        <Link href="/implementation">
-          <div style={{ color: "#f5f5f5", textDecoration: "none" }}>
-            Implementation
-          </div>
-        </Link>
-      </div>
+      <Link href="/implementation">
+        <div style={{ color: "#f5f5f5", textDecoration: "none" }}>
+          Implementation
+        </div>
+      </Link>
     </Container>
   );
 };

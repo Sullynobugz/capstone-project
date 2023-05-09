@@ -46,7 +46,25 @@ const ImplementationForm = () => {
     const storedHabits = JSON.parse(localStorage.getItem("habits")) || [];
     setHabits(storedHabits);
   }, []);
+  useEffect(() => {
+    const storedImplementationDetails =
+      JSON.parse(localStorage.getItem("implementationDetails")) || {};
 
+    if (habit in storedImplementationDetails) {
+      const implementationDetails = storedImplementationDetails[habit];
+      setGoal(implementationDetails.goal);
+      setFrequency(implementationDetails.frequency);
+      setIntensity(implementationDetails.intensity);
+      setStartingPoint(implementationDetails.startingPoint);
+      setWeeklyIncrement(implementationDetails.weeklyIncrement);
+    } else {
+      setGoal("");
+      setFrequency("");
+      setIntensity("");
+      setStartingPoint("");
+      setWeeklyIncrement("");
+    }
+  }, [habit]);
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -62,12 +80,14 @@ const ImplementationForm = () => {
     const storedImplementationDetails =
       JSON.parse(localStorage.getItem("implementationDetails")) || {};
 
+    const updatedImplementationDetails = {
+      ...storedImplementationDetails,
+      [habit]: implementationDetails,
+    };
+
     localStorage.setItem(
       "implementationDetails",
-      JSON.stringify({
-        ...storedImplementationDetails,
-        [habit]: implementationDetails,
-      })
+      JSON.stringify(updatedImplementationDetails)
     );
   };
 
@@ -76,7 +96,7 @@ const ImplementationForm = () => {
       <Title>Implementation</Title>
       <form onSubmit={handleSubmit}>
         <FormContainer>
-          <HabitSelect habits={habits} habit={habit} setHabit={setHabit} />
+          <HabitSelect habits={habits} habit={habit} onHabitChange={setHabit} />
 
           <ImplementationFormField
             label="Goal:"
