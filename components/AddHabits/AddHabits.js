@@ -1,63 +1,129 @@
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
+
+const Input = styled.input`
+  background-color: #444;
+  border: 1px solid #777;
+  color: #f5f5f5;
+  padding: 8px;
+  margin: 8px;
+`;
+
+const Label = styled.label`
+  color: #f5f5f5;
+`;
+
+const CommonButton = styled.button`
+  background-color: ${(props) => props.backgroundColor || "#444"};
+  border: ${(props) => (props.noBorder ? "none" : "1px solid #777")};
+  color: #f5f5f5;
+  padding: 8px;
+  margin: 8px;
+  cursor: pointer;
+`;
+
+const List = styled.ul`
+  list-style-type: none;
+  padding: 0;
+`;
+
+const ListItem = styled.li`
+  background-color: #444;
+  border: 1px solid #777;
+  color: #f5f5f5;
+  padding: 8px;
+  margin: 8px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Container = styled.div`
+  background-color: #2c2c2c;
+  min-height: 100vh;
+  padding: 16px;
+`;
+
+const Title = styled.h1`
+  color: #f5f5f5;
+  text-align: center;
+`;
+
+const StyledLink = styled.a`
+  color: #f5f5f5;
+  text-decoration: none;
+  &:hover {
+    color: #f5f5f5;
+  }
+`;
 
 const AddHabits = () => {
   const [habits, setHabits] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    const storedHabits = localStorage.getItem("habits");
+    if (storedHabits) {
+      setHabits(JSON.parse(storedHabits));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("habits", JSON.stringify(habits));
+  }, [habits]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (inputValue.trim() === '') {
+    if (inputValue.trim() === "") {
       return;
     }
 
-    const newHabit = { id: Math.random().toString(), title: inputValue };
+    const newHabit = { id: uuidv4(), title: inputValue };
     setHabits([...habits, newHabit]);
-    setInputValue('');
-
-    localStorage.setItem('habits', JSON.stringify([...habits, newHabit]));
+    setInputValue("");
   };
 
   const deleteHabit = (idToDelete) => {
     setHabits(habits.filter((habit) => habit.id !== idToDelete));
   };
 
-  useEffect(() => {
-    const storedHabits = localStorage.getItem('habits');
-    if (storedHabits) {
-      setHabits(JSON.parse(storedHabits));
-    }
-  }, []);
-
   return (
-    <div>
-      <h1>Hatrack</h1>
+    <Container>
+      <Title>Hatrack</Title>
       <form onSubmit={handleSubmit}>
-        <input
+        <Label htmlFor="new-habit-input">Enter a new habit:</Label>
+        <Input
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Enter a new habit"
+          id="new-habit-input"
         />
-        <button type="submit">Add Habit</button>
+        <CommonButton type="submit">Add Habit</CommonButton>
       </form>
-      <ul>
+      <List role="list">
         {habits.map((habit) => (
-          <li key={habit.id}>
+          <ListItem key={habit.id}>
             {habit.title}
-            <button type="button" onClick={() => deleteHabit(habit.id)}>
+            <CommonButton
+              type="button"
+              onClick={() => deleteHabit(habit.id)}
+              backgroundColor="#f44336"
+              noBorder
+            >
               Delete
-            </button>
-          </li>
+            </CommonButton>
+          </ListItem>
         ))}
-      </ul>
-      <div>
-        <Link href="/implementation">
-          <div>Implementation</div>
-        </Link>
-      </div>
-    </div>
+      </List>
+      <Link href="/implementation">
+        <div style={{ color: "#f5f5f5", textDecoration: "none" }}>
+          Implementation
+        </div>
+      </Link>
+    </Container>
   );
 };
 

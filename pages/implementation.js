@@ -1,11 +1,11 @@
-import Implementation from '../components/Implementation/Implementation';
-import Navbar from '../components/Navbar/Navbar';
+import ImplementationForm from "../components/Implementation/ImplementationForm";
+import Navbar from "../components/Navbar/Navbar";
 
 export default function ImplementationPage() {
   return (
     <div>
       <Navbar />
-      <Implementation />
+      <ImplementationForm />
     </div>
   );
 }

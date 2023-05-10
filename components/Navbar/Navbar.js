@@ -1,51 +1,43 @@
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import styled from "styled-components";
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    setShowDropdown(false); // Setze showDropdown auf false beim Rendern auf dem Server
-  }, []);
+  const handleImplementationClick = () => {
+    router.push("/implementation");
+  };
+
+  const handleAddHabitsClick = () => {
+    router.push("/addhabits");
+  };
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
 
-  const handleNavigation = (href) => {
-    router.push(href);
-    setShowDropdown(false);
-  };
-
   return (
     <Container>
       <MenuButton onClick={toggleDropdown}>
-        Menu {showDropdown ? '▲' : '▼'}
+        Menu {showDropdown ? "▲" : "▼"}
       </MenuButton>
       <DropdownContainer showDropdown={showDropdown}>
         <DropdownLinks>
-        <DropdownLink onClick={() => handleNavigation('/addhabits')}>
-  Add Habits
-</DropdownLink>
-<DropdownLink onClick={() => handleNavigation('/implementation')}>
-  Implementation
-</DropdownLink>
-
-
-          {/* Weitere Links hier hinzufügen */}
+          <div onClick={handleAddHabitsClick}>
+            <DropdownLink>Add Habits</DropdownLink>
+          </div>
+          <div onClick={handleImplementationClick}>
+            <DropdownLink>Implementation</DropdownLink>
+          </div>
+          {/* Additional links here */}
         </DropdownLinks>
       </DropdownContainer>
     </Container>
   );
 };
-
-// Restlicher Code bleibt unverändert
-
-  
-
 
 const Container = styled.nav`
   display: flex;
@@ -53,14 +45,15 @@ const Container = styled.nav`
   align-items: center;
   height: 60px;
   padding: 0 16px;
-  background-color: white;
-  border-bottom: 1px solid #ccc;
+  background-color: #2c2c2c;
+  border-bottom: 1px solid #444;
 `;
 
 const MenuButton = styled.button`
   border: none;
   background-color: transparent;
   font-size: 1.5rem;
+  color: #f5f5f5; /* Helle Schriftfarbe */
 `;
 
 const DropdownContainer = styled.div`
@@ -73,7 +66,7 @@ const DropdownContainer = styled.div`
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   padding: 10px;
   z-index: 1000;
-  display: ${(props) => (props.showDropdown ? 'block' : 'none')};
+  display: ${(props) => (props.showDropdown ? "block" : "none")};
 
   @media (min-width: 768px) {
     position: static !important;
