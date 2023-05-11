@@ -15,6 +15,10 @@ const Navbar = () => {
     router.push("/addhabits");
   };
 
+  const handleWeekdayClick = () => {
+    router.push("/weekday");
+  };
+
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
@@ -31,6 +35,9 @@ const Navbar = () => {
           </div>
           <div onClick={handleImplementationClick}>
             <DropdownLink>Implementation</DropdownLink>
+          </div>
+          <div onClick={handleWeekdayClick}>
+            <DropdownLink>Weekday</DropdownLink>
           </div>
           {/* Additional links here */}
         </DropdownLinks>
