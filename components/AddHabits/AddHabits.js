@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import Link from "next/link";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
+import { HabitsContext } from "../HabitsContext/HabitsContext";
 
 const Input = styled.input`
   background-color: #444;
@@ -50,28 +51,20 @@ const Title = styled.h1`
   text-align: center;
 `;
 
-const StyledLink = styled.a`
+const NavigationButton = styled.button`
+  background: none;
+  border: none;
   color: #f5f5f5;
   text-decoration: none;
+  cursor: pointer;
   &:hover {
     color: #f5f5f5;
   }
 `;
 
 const AddHabits = () => {
-  const [habits, setHabits] = useState([]);
   const [inputValue, setInputValue] = useState("");
-
-  useEffect(() => {
-    const storedHabits = localStorage.getItem("habits");
-    if (storedHabits) {
-      setHabits(JSON.parse(storedHabits));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("habits", JSON.stringify(habits));
-  }, [habits]);
+  const { habits, addHabit, deleteHabit } = useContext(HabitsContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -81,12 +74,12 @@ const AddHabits = () => {
     }
 
     const newHabit = { id: uuidv4(), title: inputValue };
-    setHabits([...habits, newHabit]);
+    addHabit(newHabit);
     setInputValue("");
   };
 
-  const deleteHabit = (idToDelete) => {
-    setHabits(habits.filter((habit) => habit.id !== idToDelete));
+  const handleDelete = (id) => {
+    deleteHabit(id);
   };
 
   return (
@@ -109,7 +102,7 @@ const AddHabits = () => {
             {habit.title}
             <CommonButton
               type="button"
-              onClick={() => deleteHabit(habit.id)}
+              onClick={() => handleDelete(habit.id)}
               backgroundColor="#f44336"
               noBorder
             >
@@ -118,11 +111,9 @@ const AddHabits = () => {
           </ListItem>
         ))}
       </List>
-      <Link href="/implementation">
-        <div style={{ color: "#f5f5f5", textDecoration: "none" }}>
-          Implementation
-        </div>
-      </Link>
+      <NavigationButton>
+        <Link href="/implementation">Go to Implementation</Link>
+      </NavigationButton>
     </Container>
   );
 };
