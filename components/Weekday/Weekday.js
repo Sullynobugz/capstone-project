@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import { HabitsContext } from "../HabitsContext/HabitsContext";
 
 const WeekdayContainer = styled.div`
@@ -75,6 +75,7 @@ const ProgressButton = styled.button`
 `;
 
 const Weekday = () => {
+  const router = useRouter();
   const { habits } = useContext(HabitsContext);
   const [selectedWeekday, setSelectedWeekday] = useState("Monday");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -83,6 +84,10 @@ const Weekday = () => {
     setSelectedWeekday(weekday);
     setShowDropdown(false);
   };
+  const navigateToProgress = (id) => {
+    router.push(`/Progress?habitId=${id}`);
+  };
+  
 
   return (
     <WeekdayContainer>
@@ -120,9 +125,9 @@ const Weekday = () => {
           habits.map((habit) => (
             <HabitItem key={habit.id}>
               {habit.title}
-              <Link href="/progress">
-                <ProgressButton>Progress</ProgressButton>
-              </Link>
+              <ProgressButton onClick={() => navigateToProgress(habit.id)}>
+                Progress
+              </ProgressButton>
             </HabitItem>
           ))}
       </HabitList>
@@ -131,5 +136,3 @@ const Weekday = () => {
 };
 
 export default Weekday;
-
-          

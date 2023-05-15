@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
+import { HabitsContext } from "../HabitsContext/HabitsContext";
 
 const HabitSelectContainer = styled.div`
   position: relative;
@@ -46,7 +47,9 @@ const HabitDropdownItem = styled.a`
   }
 `;
 
-const HabitSelect = ({ habits, habit, onHabitChange }) => {
+const HabitSelect = ({ habit, onHabitChange }) => {
+  const { habits } = useContext(HabitsContext);
+
   const [showDropdown, setShowDropdown] = useState(false);
 
   const toggleHabitDropdown = () => {
