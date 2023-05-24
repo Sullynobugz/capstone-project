@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import HabitSelect from "./HabitSelect";
-import ImplementationFormField from "./ImplementationFormField";
+import TextInput from "./TextInput";
+import { HabitsContext } from "../HabitsContext/HabitsContext";
 
 const FormContainer = styled.div`
   align-items: flex-start;
@@ -23,6 +24,13 @@ const Title = styled.h1`
   margin-bottom: 1rem;
 `;
 
+const Subtitle = styled.h2`
+  color: #f5f5f5;
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: 1rem;
+`;
+
 const SaveButton = styled.button`
   background-color: #444;
   border: 1px solid #777;
@@ -34,61 +42,63 @@ const SaveButton = styled.button`
 `;
 
 const ImplementationForm = () => {
-  const [habit, setHabit] = useState("");
-  const [goal, setGoal] = useState("");
+  const [habitId, setHabitId] = useState("");
   const [frequency, setFrequency] = useState("");
   const [intensity, setIntensity] = useState("");
   const [startingPoint, setStartingPoint] = useState("");
   const [weeklyIncrement, setWeeklyIncrement] = useState("");
-  const [habits, setHabits] = useState([]);
+  const [currentLevel, setCurrentLevel] = useState("");
+  const [volume, setVolume] = useState("");
+
+  const { habits, updateHabit } = useContext(HabitsContext);
 
   useEffect(() => {
-    const storedHabits = JSON.parse(localStorage.getItem("habits")) || [];
-    setHabits(storedHabits);
-  }, []);
-  useEffect(() => {
-    const storedImplementationDetails =
-      JSON.parse(localStorage.getItem("implementationDetails")) || {};
+    if (frequency && intensity) {
+      setVolume(frequency * intensity);
+    }
+  }, [frequency, intensity]);
 
-    if (habit in storedImplementationDetails) {
-      const implementationDetails = storedImplementationDetails[habit];
-      setGoal(implementationDetails.goal);
-      setFrequency(implementationDetails.frequency);
-      setIntensity(implementationDetails.intensity);
-      setStartingPoint(implementationDetails.startingPoint);
-      setWeeklyIncrement(implementationDetails.weeklyIncrement);
+  useEffect(() => {
+    const selectedHabit = habits.find((habit) => habit.id === habitId);
+
+    if (selectedHabit) {
+      setFrequency(selectedHabit.frequency || "");
+      setIntensity(selectedHabit.intensity || "");
+      setStartingPoint(selectedHabit.startingPoint || "");
+      setWeeklyIncrement(selectedHabit.weeklyIncrement || "");
+      setCurrentLevel(selectedHabit.currentLevel || "");
+      setVolume(selectedHabit.volume || "");
     } else {
-      setGoal("");
       setFrequency("");
       setIntensity("");
       setStartingPoint("");
       setWeeklyIncrement("");
+      setCurrentLevel("");
+      setVolume("");
     }
-  }, [habit]);
+  }, [habitId, habits]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const implementationDetails = {
-      habit,
-      goal,
+    const habit = habits.find((habit) => habit.id === habitId);
+
+    if (!habit) {
+      console.error("No habit found with id:", habitId);
+      return;
+    }
+
+    const updatedHabit = {
+      ...habit,
       frequency,
       intensity,
       startingPoint,
       weeklyIncrement,
+      currentLevel,
+      volume,
     };
 
-    const storedImplementationDetails =
-      JSON.parse(localStorage.getItem("implementationDetails")) || {};
-
-    const updatedImplementationDetails = {
-      ...storedImplementationDetails,
-      [habit]: implementationDetails,
-    };
-
-    localStorage.setItem(
-      "implementationDetails",
-      JSON.stringify(updatedImplementationDetails)
-    );
+    updateHabit(updatedHabit);
   };
 
   return (
@@ -96,32 +106,41 @@ const ImplementationForm = () => {
       <Title>Implementation</Title>
       <form onSubmit={handleSubmit}>
         <FormContainer>
-          <HabitSelect habits={habits} habit={habit} onHabitChange={setHabit} />
+          <HabitSelect selectedHabitId={habitId} onHabitIdChange={setHabitId} />
 
-          <ImplementationFormField
-            label="Goal:"
-            value={goal}
-            setValue={setGoal}
-          />
-          <ImplementationFormField
+          <Subtitle>Daily Goal</Subtitle>
+          <TextInput
             label="Frequency:"
             value={frequency}
             setValue={setFrequency}
           />
-          <ImplementationFormField
+          <TextInput
             label="Intensity:"
             value={intensity}
             setValue={setIntensity}
           />
-          <ImplementationFormField
+          <TextInput
+            label="Volume:"
+            value={volume}
+            setValue={setVolume}
+            disabled
+          />
+
+          <Subtitle>WIP</Subtitle>
+          <TextInput
             label="Starting Point:"
             value={startingPoint}
             setValue={setStartingPoint}
           />
-          <ImplementationFormField
+          <TextInput
             label="Weekly Increment:"
             value={weeklyIncrement}
             setValue={setWeeklyIncrement}
+          />
+          <TextInput
+            label="Current Level:"
+            value={currentLevel}
+            setValue={setCurrentLevel}
           />
         </FormContainer>
         <SaveButton type="submit">Save Implementation Details</SaveButton>

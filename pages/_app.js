@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import GlobalStyle from "../styles";
 import { HabitsProvider } from "../components/HabitsContext/HabitsContext";
 
-export default function App({ Component, pageProps }) {
+function MyApp({ Component, pageProps }) {
   const router = useRouter();
 
   return (
@@ -14,3 +14,5 @@ export default function App({ Component, pageProps }) {
     </>
   );
 }
+
+export default MyApp;

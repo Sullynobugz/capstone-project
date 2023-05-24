@@ -1,11 +1,13 @@
 import Weekday from "../components/Weekday/Weekday";
 import Navbar from "../components/Navbar/Navbar";
 
-export default function WeekdayPage() {
+const WeekdayPage = () => {
   return (
     <div>
       <Navbar />
       <Weekday />
     </div>
   );
-}
+};
+
+export default WeekdayPage;

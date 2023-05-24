@@ -1,13 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { HabitsContext } from "../HabitsContext/HabitsContext";
 
 const HabitSelectContainer = styled.div`
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin-bottom: 32px;
+  display: inline-block;
 `;
 
 const HabitSelectButton = styled.button`
@@ -22,7 +19,7 @@ const HabitSelectDropdown = styled.div`
   position: absolute;
   top: 100%;
   left: 0;
-  right: 0;
+  width: 100%;
   background-color: white;
   border: 1px solid #ccc;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
@@ -47,35 +44,55 @@ const HabitDropdownItem = styled.a`
   }
 `;
 
-const HabitSelect = ({ habit, onHabitChange }) => {
+const HabitSelect = ({ selectedHabitId, onHabitIdChange }) => {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef();
   const { habits } = useContext(HabitsContext);
 
-  const [showDropdown, setShowDropdown] = useState(false);
-
-  const toggleHabitDropdown = () => {
-    setShowDropdown(!showDropdown);
+  const getHabitTitleById = (id) => {
+    const habit = habits.find((habit) => habit.id === id);
+    return habit ? habit.title : "";
   };
 
-  const handleHabitChange = (habit) => {
-    onHabitChange(habit);
+  const toggleHabitDropdown = () => {
+    setShowDropdown((prevShowDropdown) => !prevShowDropdown);
+  };
+
+  const handleClickOutsideDropdown = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setShowDropdown(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutsideDropdown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideDropdown);
+    };
+  }, []);
+
+  const handleHabitChange = (newHabitId) => {
+    onHabitIdChange(newHabitId);
     setShowDropdown(false);
   };
 
   return (
-    <HabitSelectContainer>
+    <HabitSelectContainer ref={dropdownRef}>
       <HabitSelectButton onClick={toggleHabitDropdown}>
-        {habit || "Select a habit..."} {showDropdown ? "▲" : "▼"}
+        {getHabitTitleById(selectedHabitId) || "Select a habit..."}{" "}
+        {showDropdown ? "▲" : "▼"}
       </HabitSelectButton>
       <HabitSelectDropdown showDropdown={showDropdown}>
-        {habits &&
-          habits.map((habit) => (
+        {habits.map((habit) =>
+          habit.title ? (
             <HabitDropdownItem
               key={habit.id}
-              onClick={() => handleHabitChange(habit.title)}
+              onClick={() => handleHabitChange(habit.id)} // Pass habit.id instead of habit.title
             >
               {habit.title}
             </HabitDropdownItem>
-          ))}
+          ) : null
+        )}
       </HabitSelectDropdown>
     </HabitSelectContainer>
   );
