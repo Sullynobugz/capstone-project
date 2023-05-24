@@ -42,20 +42,32 @@ const Quote = styled.p`
   text-align: center;
 `;
 
+const ProgressPercentage = styled.span`
+  color: #f5f5f5;
+`;
+
 const Progress = ({ habitId }) => {
-  const { habits } = useContext(HabitsContext);
+  const { habits, updateHabitProgress } = useContext(HabitsContext);
   const router = useRouter();
 
-  const habit = habits.find((h) => h.id === habitId) || { title: "" };
+  const [sliderValue, setSliderValue] = useState(0);
+
+  const habit = habits.find((h) => h.id === habitId);
+  if (!habit) {
+    console.warn(`No habit found with id ${habitId}`);
+    return null; // or some error handling
+  }
+
   const habitTitle = habit.title;
 
-  const [progressValue, setProgressValue] = useState(0);
-
-  useEffect(() => {
-    console.log("Current URL:", router.pathname);
-  }, [router]);
-
   const handleDoneClick = () => {
+    const sliderNumber = Number(sliderValue);
+    if (isNaN(sliderNumber)) {
+      console.warn(`Invalid slider value: ${sliderValue}`);
+      return;
+    }
+    const newProgress = Math.min(habit.progress + sliderNumber, 100);
+    updateHabitProgress(habitId, newProgress);
     router.push("/weekday");
   };
 
@@ -66,13 +78,15 @@ const Progress = ({ habitId }) => {
         <Slider
           min="0"
           max="100"
-          value={progressValue}
-          onChange={(e) => setProgressValue(e.target.value)}
+          value={sliderValue}
+          onChange={(e) => setSliderValue(e.target.value)}
         />
+        <span style={{ color: "white" }}>{sliderValue}%</span>
       </SliderContainer>
       <DoneButton onClick={handleDoneClick}>Done</DoneButton>
       <Quote>
-        &ldquo;You do not rise to the level of your goals. You fall to the level of your systems&rdquo; - James Clear
+        &ldquo;You do not rise to the level of your goals. You fall to the level
+        of your systems&rdquo; - James Clear
       </Quote>
     </ProgressContainer>
   );

@@ -21,6 +21,7 @@ const ImplementationInput = styled.input`
   border-radius: 5px;
   padding: 8px;
   font-size: 1.2rem;
+  width: 100%;
 `;
 
 const TextInput = ({ id, label, value, setValue }) => {

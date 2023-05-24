@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import HabitSelect from "./HabitSelect";
 
-
 const FormContainer = styled.div`
   align-items: flex-start;
   display: flex;
@@ -16,24 +15,23 @@ const FormContainer = styled.div`
   border-radius: 4px;
 `;
 
-const Title = styled.h2`
+const Subtitle = styled.h3`
   color: #f5f5f5;
   text-align: center;
   margin-bottom: 16px;
 `;
 
-const HabitForm = ({ habits, habit, setHabit }) => {
-  const handleHabitChange = (newHabit) => {
-    setHabit(newHabit);
-  };
-
+const HabitForm = ({ habits, selectedHabitId, onHabitIdChange }) => {
   return (
     <FormContainer>
-      <Title>Select a Habit</Title>
-      <HabitSelect habits={habits} habit={habit} onHabitChange={handleHabitChange} />
+      <Subtitle>Goal</Subtitle>
+      <HabitSelect
+        habits={habits}
+        selectedHabitId={selectedHabitId}
+        onHabitIdChange={onHabitIdChange}
+      />
     </FormContainer>
   );
 };
-
 
 export default HabitForm;

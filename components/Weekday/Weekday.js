@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
-import { useRouter } from "next/router";
 import { HabitsContext } from "../HabitsContext/HabitsContext";
+import HabitItem from "./HabitItem";
 
 const WeekdayContainer = styled.div`
   display: flex;
@@ -16,6 +16,7 @@ const WeekdayContainer = styled.div`
 const WeekdayDropdownContainer = styled.div`
   position: relative;
   display: inline-block;
+  z-index: 2;
 `;
 
 const WeekdayDropdownButton = styled.button`
@@ -55,39 +56,24 @@ const HabitList = styled.ul`
   max-width: 400px;
 `;
 
-const HabitItem = styled.li`
-  background-color: #444;
-  border: 1px solid #777;
-  color: #f5f5f5;
-  padding: 16px;
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ProgressButton = styled.button`
-  background-color: #4caf50;
-  border: none;
-  color: #f5f5f5;
-  padding: 8px;
-  cursor: pointer;
-`;
-
 const Weekday = () => {
-  const router = useRouter();
   const { habits } = useContext(HabitsContext);
   const [selectedWeekday, setSelectedWeekday] = useState("Monday");
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const weekdays = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
   const handleWeekdayClick = (weekday) => {
     setSelectedWeekday(weekday);
     setShowDropdown(false);
   };
-  const navigateToProgress = (id) => {
-    router.push(`/Progress?habitId=${id}`);
-  };
-  
 
   return (
     <WeekdayContainer>
@@ -97,39 +83,20 @@ const Weekday = () => {
           {selectedWeekday}
         </WeekdayDropdownButton>
         <WeekdayDropdownContent showDropdown={showDropdown}>
-          <WeekdayDropdownLink onClick={() => handleWeekdayClick("Monday")}>
-            Monday
-          </WeekdayDropdownLink>
-          <WeekdayDropdownLink onClick={() => handleWeekdayClick("Tuesday")}>
-            Tuesday
-          </WeekdayDropdownLink>
-          <WeekdayDropdownLink onClick={() => handleWeekdayClick("Wednesday")}>
-            Wednesday
-          </WeekdayDropdownLink>
-          <WeekdayDropdownLink onClick={() => handleWeekdayClick("Thursday")}>
-            Thursday
-          </WeekdayDropdownLink>
-          <WeekdayDropdownLink onClick={() => handleWeekdayClick("Friday")}>
-            Friday
-          </WeekdayDropdownLink>
-          <WeekdayDropdownLink onClick={() => handleWeekdayClick("Saturday")}>
-            Saturday
-          </WeekdayDropdownLink>
-          <WeekdayDropdownLink onClick={() => handleWeekdayClick("Sunday")}>
-            Sunday
-          </WeekdayDropdownLink>
+          {weekdays.map((weekday) => (
+            <WeekdayDropdownLink
+              key={weekday}
+              onClick={() => handleWeekdayClick(weekday)}
+            >
+              {weekday}
+            </WeekdayDropdownLink>
+          ))}
         </WeekdayDropdownContent>
       </WeekdayDropdownContainer>
       <HabitList>
-        {Array.isArray(habits) &&
-          habits.map((habit) => (
-            <HabitItem key={habit.id}>
-              {habit.title}
-              <ProgressButton onClick={() => navigateToProgress(habit.id)}>
-                Progress
-              </ProgressButton>
-            </HabitItem>
-          ))}
+        {habits.map((habit) => (
+          <HabitItem key={habit.id} habit={habit} />
+        ))}
       </HabitList>
     </WeekdayContainer>
   );

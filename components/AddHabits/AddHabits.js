@@ -73,7 +73,7 @@ const AddHabits = () => {
       return;
     }
 
-    const newHabit = { id: uuidv4(), title: inputValue };
+    const newHabit = { id: uuidv4(), title: inputValue, notes: "" };
     addHabit(newHabit);
     setInputValue("");
   };
@@ -100,6 +100,11 @@ const AddHabits = () => {
         {habits.map((habit) => (
           <ListItem key={habit.id}>
             {habit.title}
+            <Link href={`/notes/${habit.id}`}>
+              <CommonButton type="button" backgroundColor="#3f51b5" noBorder>
+                Notes
+              </CommonButton>
+            </Link>
             <CommonButton
               type="button"
               onClick={() => handleDelete(habit.id)}
